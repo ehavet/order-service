@@ -46,6 +46,8 @@ export default function (router, container) {
         })
 
     router.post('/v0/orders/',
+        body('client_id').trim().notEmpty().withMessage('client_id property must be provided'),
+        body('client_id').trim().notEmpty().withMessage('client_id property must be a string'),
         body('item_id').trim().notEmpty().withMessage('item_id property must be provided'),
         body('item_id').trim().isString().withMessage('item_id property must be a string'),
         body('quantity').trim().notEmpty().withMessage('quantity property must be provided'),
@@ -55,7 +57,7 @@ export default function (router, container) {
             if (!errors.isEmpty()) return res.boom.badRequest(errors.array().map(element => element.msg))
 
             try {
-                res.status(201).send(await container.CreateOrder(req.body.item_id, req.body.quantity))
+                res.status(201).send(await container.CreateOrder(req.body.client_id, req.body.item_id, req.body.quantity))
             } catch (error) {
                 res.boom.internal(error)
             }
