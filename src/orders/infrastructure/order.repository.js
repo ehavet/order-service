@@ -14,7 +14,7 @@ export class OrderRepository {
     }
 
     async add(order) {
-        order.id = getAutoId()
+        order.id = order.id && isAvailableId(order.id) ? order.id : getAutoId()
         if (isObject(order)) orders.push(order)
         return order.id
     }
@@ -23,9 +23,15 @@ export class OrderRepository {
         const index = orders.findIndex((order => order.id === id))
         orders.splice(index,1)
     }
+
+    async update(order) {
+        await this.remove(order.id)
+        await this.add(order)
+    }
 }
 
 const getAutoId = () =>
     orders.map(order => order.id).sort((a, b) => a - b)[orders.length - 1] + 1
 
 const isObject = (object) => object === Object(object)
+const isAvailableId = (id) => !orders.some(order => order.id === id)

@@ -1,10 +1,14 @@
 export default function (container) {
     return async ({message}) => {
         const {event, payload} = parseMessage(message)
-
+        
         switch (event) {
-        case '?eventName?':
-            return await container.ValidateOrder(payload)
+        // Ici l'événement 'event-key' est consommé et le usecase FaireUnTruc est exécutée
+        // les traitements effectués sont décrits dans src/orders/domain/faire-un-truc.usecase.js
+        case 'event-key':
+            return await container.FaireUnTruc(payload)
+        // case 'other-event-key':
+        //     return await container.monSecondNouveauUsecase(payload)
         default:
             return
         }
